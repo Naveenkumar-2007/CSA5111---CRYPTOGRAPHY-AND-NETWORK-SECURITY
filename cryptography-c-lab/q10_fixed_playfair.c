@@ -1,0 +1,5 @@
+#include "cryptoutils.h"
+static const char SQUARE[26]="MFHIKUNOPQZVWXYELARGDSTBC"; /* I/J share one cell */
+static int pos(char x){ if(x=='J')x='I'; for(int i=0;i<25;i++)if(SQUARE[i]==x)return i; return -1; }
+static void pair(char a,char b){int p=pos(a),q=pos(b);if(p<0||q<0)return;int r1=p/5,c1=p%5,r2=q/5,c2=q%5;if(r1==r2){c1=(c1+1)%5;c2=(c2+1)%5;}else if(c1==c2){r1=(r1+1)%5;r2=(r2+1)%5;}else{int t=c1;c1=c2;c2=t;}putchar(SQUARE[r1*5+c1]);putchar(SQUARE[r2*5+c2]);}
+int main(void){char text[2048],clean[2048],out[4096];cu_readline("Plaintext to encrypt: ",text,sizeof text);cu_letters(text,clean,1);size_t n=strlen(clean),k=0;for(size_t i=0;i<n;){char a=clean[i++],b;if(i>=n)b='X';else if(clean[i]==a)b='X';else b=clean[i++];out[k++]=a;out[k++]=b;}out[k]='\0';printf("Fixed matrix:\nMFHIK\nUNOPQ\nZVWXY\nELARG\nDSTBC\nCiphertext: ");for(size_t i=0;i<k;i+=2)pair(out[i],out[i+1]);puts("");puts("Note: I and J share a cell; X is inserted to separate repeated letters and pad an odd length.");return 0;}

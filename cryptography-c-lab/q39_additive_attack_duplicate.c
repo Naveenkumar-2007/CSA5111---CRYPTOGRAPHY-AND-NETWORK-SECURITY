@@ -1,0 +1,5 @@
+#include "cryptoutils.h"
+static const double ef[26]={8.167,1.492,2.782,4.253,12.702,2.228,2.015,6.094,6.966,0.153,0.772,4.025,2.406,6.749,7.507,1.929,0.095,5.987,6.327,9.056,2.758,0.978,2.360,0.150,1.974,0.074};
+typedef struct{int shift;double score;} Cand;
+static int cmp(const void*a,const void*b){double d=((const Cand*)b)->score-((const Cand*)a)->score;return d>0?1:d<0?-1:0;}
+int main(void){char s[4096];cu_readline("Ciphertext: ",s,sizeof s);Cand ca[26];for(int sh=0;sh<26;sh++){int count[26]={0},n=0;for(size_t i=0;s[i];i++)if(isalpha((unsigned char)s[i])){int p=cu_mod(toupper((unsigned char)s[i])-'A'-sh,26);count[p]++;n++;}double score=0;for(int i=0;i<26;i++)score+=count[i]*log((ef[i]+0.01)/100.0);ca[sh]=(Cand){sh,score/(n?n:1)};}qsort(ca,26,sizeof ca[0],cmp);puts("Top 10 Caesar-shift candidates (frequency likelihood only):");for(int r=0;r<10;r++){printf("%2d. decrypt shift=%2d: ",r+1,ca[r].shift);for(size_t i=0;s[i];i++){unsigned char c=(unsigned char)s[i];if(isupper(c))putchar('A'+cu_mod(c-'A'-ca[r].shift,26));else if(islower(c))putchar('a'+cu_mod(c-'a'-ca[r].shift,26));else putchar(c);}puts("");}return 0;}

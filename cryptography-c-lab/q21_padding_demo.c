@@ -1,0 +1,4 @@
+#include <stdio.h>
+#include <string.h>
+static void bits_to_padded(const char *in,int block,char *out,size_t cap){size_t n=strlen(in),k=0;if(n+block+1>=cap){out[0]=0;return;}for(size_t i=0;i<n;i++)if(in[i]=='0'||in[i]=='1')out[k++]=in[i];out[k++]='1';while(k%(size_t)block)out[k++]='0';out[k]=0;}
+int main(void){char bits[2048],out[4096];int block;printf("Enter plaintext bits (0/1): ");if(!fgets(bits,sizeof bits,stdin))return 1;bits[strcspn(bits,"\r\n")]=0;printf("Block/segment size in bits: ");if(scanf("%d",&block)!=1||block<=0){puts("Invalid block size.");return 1;}bits_to_padded(bits,block,out,sizeof out);printf("Padded bits (1 followed by zero bits, including an extra marker if needed): %s\n",out);puts("Motivation for always padding: the receiver can unambiguously identify/remove padding even when the original plaintext length was already a whole number of blocks. Use a standardized padding scheme and authentication in real software.");return 0;}
