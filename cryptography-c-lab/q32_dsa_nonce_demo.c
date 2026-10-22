@@ -1,5 +1,0 @@
-#include "cryptoutils.h"
-static long long invmod(long long a,long long m){for(long long x=1;x<m;x++)if((a*x)%m==1)return x;return -1;}
-static unsigned long long modpowll(unsigned long long a,unsigned long long e,unsigned long long m){unsigned long long r=1;while(e){if(e&1)r=(r*a)%m;a=(a*a)%m;e>>=1;}return r;}
-static void sign_demo(long long h,long long x,long long k,long long p,long long q,long long g){long long r=(long long)(modpowll((unsigned long long)g,(unsigned long long)k,(unsigned long long)p)%(unsigned long long)q);long long kinv=invmod(k,q);long long s=(kinv*(h+x*r))%q;printf("nonce k=%lld -> signature (r,s)=(%lld,%lld)\n",k,r,s);}
-int main(void){long long p=23,q=11,g=4,x=3,h=9;puts("Tiny educational DSA illustration (small insecure parameters): p=23, q=11, g=4, private x=3, hash h=9");sign_demo(h,x,2,p,q,g);sign_demo(h,x,7,p,q,g);puts("The signatures differ because DSA uses a per-signature nonce k. Reusing or leaking k can reveal the private key. Textbook RSA signatures with the same key and message hash are deterministic; real signatures use secure encodings and standardized algorithms.");return 0;}

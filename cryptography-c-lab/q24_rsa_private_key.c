@@ -1,2 +1,0 @@
-#include "cryptoutils.h"
-int main(void){long long n=3599,e=31,p=0,q=0;for(long long i=2;i*i<=n;i++)if(n%i==0){p=i;q=n/i;break;}if(!p){puts("Could not factor n.");return 1;}long long phi=(p-1)*(q-1);int d=cu_inv((int)e,(int)phi);printf("n=%lld, e=%lld\nFactorization: p=%lld, q=%lld\nphi(n)=(p-1)(q-1)=%lld\nPrivate exponent d=e^-1 mod phi(n)=%d\n",n,e,p,q,phi,d);printf("Private key: (d,n) = (%d,%lld)\n",d,n);return 0;}
